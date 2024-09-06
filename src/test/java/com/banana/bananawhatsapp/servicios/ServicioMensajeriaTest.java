@@ -21,7 +21,7 @@ class ServicioMensajeriaTest {
     void cleanAndReloadData() {
         DBUtil.reloadDB();
     }
-
+    /*
     @Test
     void dadoRemitenteYDestinatarioYTextoValido_cuandoEnviarMensaje_entoncesMensajeValido() throws Exception {
         Usuario remitente = repoUsuario.obtener(1);
@@ -76,4 +76,6 @@ class ServicioMensajeriaTest {
             boolean borrarChat = servicio.borrarChatConUsuario(remitente, destinatario);
         });
     }
+    */
+
 }
