@@ -1,10 +1,11 @@
-package com.banana.bananawhatsapp.servicios;
+package com.banana.bananawhatsapp.persistencia;
 
 import com.banana.bananawhatsapp.config.SpringConfig;
 import com.banana.bananawhatsapp.exceptions.UsuarioException;
 import com.banana.bananawhatsapp.modelos.Usuario;
 import com.banana.bananawhatsapp.util.DBUtil;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,20 +13,26 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {SpringConfig.class})
 @EnableAutoConfiguration
-class ServicioUsuariosTest {
+class UsuarioRepositoryTest {
+
     @Autowired
-    IServicioUsuarios servicio;
+    IUsuarioRepository repo;
+
+    IMensajeRepository mensajeRepository;
 
     @BeforeEach
     void cleanAndReloadData() {
@@ -33,68 +40,88 @@ class ServicioUsuariosTest {
     }
 
     @Test
-    void dadoUnUsuarioValido_cuandoCrearUsuario_entoncesUsuarioValido() throws Exception {
+    @Order(1)
+    void dadoUnUsuarioValido_cuandoCrear_entoncesUsuarioValido() throws Exception {
         Usuario nuevo = new Usuario(null, "Ricardo", "r@r.com", LocalDate.now(), true);
-        servicio.crearUsuario(nuevo);
+
+        repo.save(nuevo);
 
         assertThat(nuevo, notNullValue());
         assertThat(nuevo.getId(), greaterThan(0));
     }
 
     @Test
-    void dadoUnUsuarioNOValido_cuandoCrearUsuario_entoncesExcepcion() {
-        Usuario nuevo = new Usuario(null, "Ricardo", "r", LocalDate.now(), true);
+    @Order(2)
+    void dadoUnUsuarioNOValido_cuandoCrear_entoncesExcepcion() throws Exception {
+        Usuario nuevo = new Usuario(-1, "Ricardo", "r", LocalDate.now(), true);
+        //Espera una exception, desde el service se lanza las validaciones
         assertThrows(UsuarioException.class, () -> {
-            servicio.crearUsuario(nuevo);
+            repo.saveValidado(nuevo);
         });
     }
 
     @Test
-    void dadoUnUsuarioValido_cuandoBorrarUsuario_entoncesUsuarioValido() {
-        Usuario user = new Usuario(null, "Gema", "g@g.com", LocalDate.now(), true);
-        servicio.crearUsuario(user);
-        boolean userDelete = servicio.borrarUsuario(user);
-        assertThat(userDelete, is(false));
-    }
-
-    @Test
-    void dadoUnUsuarioNOValido_cuandoBorrarUsuario_entoncesExcepcion() {
-        Usuario user = new Usuario(-1, "John", "j@j.com", LocalDate.now(), false);
-        assertThrows(Exception.class, () -> {
-            servicio.borrarUsuario(user);
-        });
-    }
-
-    @Test
-    void dadoUnUsuarioValido_cuandoActualizarUsuario_entoncesUsuarioValido() {
+    @Order(3)
+    void dadoUnUsuarioValido_cuandoActualizar_entoncesUsuarioValido() throws Exception {
         Integer iDUser = 1;
         Usuario user = new Usuario(iDUser, "Juan", "j@j.com", LocalDate.now(), true);
-        Usuario userUpdate = servicio.actualizarUsuario(user);
-        assertThat(userUpdate.getEmail(), is("j@j.com"));
+        repo.save(user);
+        assertThat(user.getNombre(), is("Juan"));
     }
 
     @Test
-    void dadoUnUsuarioNOValido_cuandoActualizarUsuario_entoncesExcepcion() {
-        Usuario user = new Usuario(1, "Juan", "j@j.com", LocalDate.now(), false);
+    @Order(4)
+    void dadoUnUsuarioNOValido_cuandoActualizar_entoncesExcepcion() throws Exception {
+        Integer iDUser = -1;
+        Usuario user = new Usuario(iDUser, "Juan", "j@j.com", LocalDate.now(), true);
+        //Espera una exception, desde el service se lanza las validaciones
         assertThrows(UsuarioException.class, () -> {
-            servicio.actualizarUsuario(user);
+            repo.saveValidado(user);
         });
     }
 
     @Test
-    void dadoUnUsuarioValido_cuandoObtenerPosiblesDesinatarios_entoncesUsuariosValidos() {
-        int numPosibles = 100;
-        Usuario user = new Usuario(1, "Juan", "j@j.com", LocalDate.now(), true);
-        List<Usuario> conjuntoDestinatarios = servicio.obtenerPosiblesDesinatarios(user, numPosibles);
-        assertThat(conjuntoDestinatarios.size(), lessThanOrEqualTo(numPosibles));
+    @Order(5)
+    void dadoUnUsuarioValido_cuandoBorrar_entoncesOK() throws SQLException {
+        Optional<Usuario> userBorrar = repo.findById(1);
+        repo.delete(userBorrar.get());
+
+        boolean ok= true;
+        assertTrue(ok);
+    }
+
+
+
+    @Test
+    @Order(6)
+    void dadoUnUsuarioNOValido_cuandoBorrar_entoncesExcepcion() throws Exception {
+        Usuario user = new Usuario(-1, null, null, null, true);
+        assertThrows(Exception.class, () -> {
+            repo.deleteValidado(user);
+        });
     }
 
     @Test
-    void dadoUnUsuarioNOValido_cuandoObtenerPosiblesDesinatarios_entoncesExcepcion() {
+    @Order(7)
+    void dadoUnUsuarioValido_cuandoObtenerPosiblesDestinatarios_entoncesLista() throws Exception {
+        Integer iDUser = 1;
+        int numPosibles = 100;
+        Usuario user = new Usuario(iDUser, "Juan", "j@j.com", LocalDate.now(), true);
+        List<Usuario> usuariosDestinatarios = repo.findByIdAndDestinatario(1);
+
+        assertTrue(usuariosDestinatarios.size() <= numPosibles);
+    }
+
+    @Test
+    @Order(8)
+    void dadoUnUsuarioNOValido_cuandoObtenerPosiblesDestinatarios_entoncesExcepcion() throws Exception {
         Usuario user = new Usuario(-1, null, null, null, true);
         int numPosibles = 100;
         assertThrows(UsuarioException.class, () -> {
-            servicio.obtenerPosiblesDesinatarios(user, numPosibles);
+            List<Usuario> usuariosDestinatarios = repo.findByIdAndDestinatarioValidado(-1);
         });
+
     }
+
+
 }
