@@ -1,13 +1,47 @@
 package com.banana.bananawhatsapp.persistencia;
 
+import com.banana.bananawhatsapp.exceptions.MensajeException;
+import com.banana.bananawhatsapp.exceptions.UsuarioException;
 import com.banana.bananawhatsapp.modelos.Mensaje;
 import com.banana.bananawhatsapp.modelos.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
-public interface IMensajeRepository extends JpaRepository<Mensaje,Long> {
+public interface IMensajeRepository extends JpaRepository<Mensaje,Integer> {
+
+    @Query("Select m FROM Mensaje m Where m.remitente!= null")
+    List<Mensaje> findMensajeListByUsuario(Optional<Usuario> usuario);
+
+    @Query ("SELECT m FROM Mensaje m INNER JOIN Usuario u ON m.destinatario = u.id WHERE m.remitente = :user")
+    public List<Mensaje> findByIdAndDestinatario(@Param("user") Optional<Usuario> userId);
+
+    public default List<Mensaje> findMessageByUserException (Optional<Usuario> usuario) throws SQLException {
+         if(usuario.get().getNombre()!= null) {
+             List <Mensaje> list = findMensajeListByUsuario(usuario);
+             return list;
+        }else if (usuario.get().getEmail()!= null){
+            List <Mensaje> list = findMensajeListByUsuario(usuario);
+             return list;
+        }else {
+             throw new UsuarioException();
+        }
+
+    }
+
+    public default void saveWithException (Mensaje mensaje) throws SQLException {
+        if(mensaje.getRemitente().getNombre()!= null) {
+            save(mensaje);
+        }else if (mensaje.getDestinatario().getNombre()!= null){
+            save(mensaje);
+        }else {
+            throw new MensajeException();
+        }
+    }
 
 
 }
