@@ -17,8 +17,8 @@ public interface IMensajeRepository extends JpaRepository<Mensaje,Integer> {
     @Query("Select m FROM Mensaje m Where m.remitente!= null")
     List<Mensaje> findMensajeListByUsuario(Optional<Usuario> usuario);
 
-     @Query ("DELETE m FROM Mensaje m INNER JOIN Usuario u ON u=:user AND u=:user2")
-    public boolean deleteDouble (@Param("user") Optional<Usuario> user, @Param("user2") Optional<Usuario> user2);
+     /*@Query ("DELETE m FROM Mensaje m INNER JOIN Usuario u ON u=:user AND u=:user2")
+    public boolean deleteDouble (@Param("user") Optional<Usuario> user, @Param("user2") Optional<Usuario> user2);*/
 
     public default List<Mensaje> findMessageByUserException (Optional<Usuario> usuario) throws SQLException {
          if(usuario.get().getNombre()!= null) {

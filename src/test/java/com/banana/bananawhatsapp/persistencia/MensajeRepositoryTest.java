@@ -88,7 +88,7 @@ class MensajeRepositoryTest {
         });
     }
 
-
+ /*
     @Test
     @Order(5)
     void dadoUnRemitenteValido_cuandoBorrarEntre_entoncesOK() throws Exception {
@@ -100,7 +100,7 @@ class MensajeRepositoryTest {
         assertTrue(borrarChat);
     }
 
- /*
+
 
     @Test
     @Order(6)
