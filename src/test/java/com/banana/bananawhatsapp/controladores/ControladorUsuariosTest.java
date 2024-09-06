@@ -24,22 +24,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @EnableAutoConfiguration
 class ControladorUsuariosTest {
 
-    //@Autowired
+    @Autowired
     ControladorUsuarios controladorUsuarios;
 
+    @Autowired
     IUsuarioRepository repoUser;
 
-
-    @Test
-    void dadoUsuarioValido_cuandoAlta_entoncesUsuarioValido() {
-        Usuario nuevo = new Usuario(null, "Ricardo", "r@r.com", LocalDate.now(), true);
-        controladorUsuarios.alta(nuevo);
-
-        assertThat(nuevo, notNullValue());
-        assertThat(nuevo.getId(), greaterThan(0));
-    }
-
-    /*
     @BeforeEach
     void cleanAndReloadData() {
         DBUtil.reloadDB();
@@ -47,12 +37,13 @@ class ControladorUsuariosTest {
 
     @Test
     void dadoUsuarioValido_cuandoAlta_entoncesUsuarioValido() {
-        Usuario nuevo = new Usuario(null, "Ricardo", "r@r.com", LocalDate.now(), true);
+        Usuario nuevo = new Usuario(null, "Ricardo123", "r123@r.com", LocalDate.now(), true);
         controladorUsuarios.alta(nuevo);
 
         assertThat(nuevo, notNullValue());
         assertThat(nuevo.getId(), greaterThan(0));
     }
+
 
     @Test
     void dadoUsuarioNOValido_cuandoAlta_entoncesExcepcion() {
@@ -62,16 +53,17 @@ class ControladorUsuariosTest {
         });
     }
 
+    /*
     @Test
     void dadoUsuarioValido_cuandoActualizar_entoncesUsuarioValido() throws Exception {
         Integer iDUser = 2;
         LocalDate fecha = LocalDate.parse("2023-12-17");
-        Usuario user = repoUser.obtener(iDUser);
+        Usuario user = repoUser.findById(iDUser).get();
         user.setNombre("Juan Luis");
         user.setEmail("jl@jll.com");
         user.setAlta(fecha);
         controladorUsuarios.actualizar(user);
-        assertThat(repoUser.obtener(iDUser).getNombre(), is("Juan Luis"));
+        assertThat(repoUser.findById(iDUser).get().getNombre(), is("Juan Luis"));
     }
 
     @Test

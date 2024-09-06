@@ -56,7 +56,7 @@ class UsuarioRepositoryTest {
         Usuario nuevo = new Usuario(-1, "Ricardo", "r", LocalDate.now(), true);
         //Espera una exception, desde el service se lanza las validaciones
         assertThrows(UsuarioException.class, () -> {
-            repo.save(nuevo);
+            repo.saveValidado(nuevo);
         });
     }
 
@@ -76,7 +76,7 @@ class UsuarioRepositoryTest {
         Usuario user = new Usuario(iDUser, "Juan", "j@j.com", LocalDate.now(), true);
         //Espera una exception, desde el service se lanza las validaciones
         assertThrows(UsuarioException.class, () -> {
-            repo.save(user);
+            repo.saveValidado(user);
         });
     }
 
@@ -90,17 +90,17 @@ class UsuarioRepositoryTest {
         assertTrue(ok);
     }
 
-    /*
+
 
     @Test
     @Order(6)
     void dadoUnUsuarioNOValido_cuandoBorrar_entoncesExcepcion() throws Exception {
         Usuario user = new Usuario(-1, null, null, null, true);
         assertThrows(Exception.class, () -> {
-            repo.borrar(user);
+            repo.deleteValidado(user);
         });
     }
-*/
+
     @Test
     @Order(7)
     void dadoUnUsuarioValido_cuandoObtenerPosiblesDestinatarios_entoncesLista() throws Exception {
@@ -118,7 +118,7 @@ class UsuarioRepositoryTest {
         Usuario user = new Usuario(-1, null, null, null, true);
         int numPosibles = 100;
         assertThrows(UsuarioException.class, () -> {
-            List<Usuario> usuariosDestinatarios = repo.findByIdAndDestinatario(-1);
+            List<Usuario> usuariosDestinatarios = repo.findByIdAndDestinatarioValidado(-1);
         });
 
     }
