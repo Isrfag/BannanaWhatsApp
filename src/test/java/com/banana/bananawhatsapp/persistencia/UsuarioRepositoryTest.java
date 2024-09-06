@@ -6,6 +6,7 @@ import com.banana.bananawhatsapp.util.DBUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -17,6 +18,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class UsuarioRepositoryTest {
+
+    @Autowired
     IUsuarioRepository repo;
 
     IMensajeRepository mensajeRepository;
@@ -31,7 +34,6 @@ class UsuarioRepositoryTest {
     void dadoUnUsuarioValido_cuandoCrear_entoncesUsuarioValido() throws Exception {
         Usuario nuevo = new Usuario(null, "Ricardo", "r@r.com", LocalDate.now(), true);
         repo.crear(nuevo);
-
         assertThat(nuevo, notNullValue());
         assertThat(nuevo.getId(), greaterThan(0));
     }

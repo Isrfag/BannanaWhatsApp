@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
@@ -32,10 +33,12 @@ class MensajeRepositoryTest {
     @Test
     @Order(1)
     void dadoUnMensajeValido_cuandoCrear_entoncesMensajeValido() throws Exception {
-        Usuario remitente = repoUsuario.obtener(1);
-        Usuario destinatario = repoUsuario.obtener(2);
 
-        Mensaje message = new Mensaje(null, remitente, destinatario, "De acuerdo Juana. Un saludo.", LocalDate.now());
+        
+        Optional<Usuario> remitente = repoUsuario.findById(1L);
+        Optional<Usuario> destinatario = repoUsuario.findById(2L);
+
+        Mensaje message = new Mensaje(null,remitente.get(), destinatario.get(), "De acuerdo Juana. Un saludo.", LocalDate.now());
 
         repoMensaje.crear(message);
         assertThat(message, notNullValue());
