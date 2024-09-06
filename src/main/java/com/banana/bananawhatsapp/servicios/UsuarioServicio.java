@@ -6,7 +6,7 @@ import com.banana.bananawhatsapp.persistencia.IUsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
+import java.util.List;
 
 @Service
 public class UsuarioServicio implements IServicioUsuarios {
@@ -57,14 +57,14 @@ public class UsuarioServicio implements IServicioUsuarios {
         }
     }
 
-  /*  @Override
-    public Set<Usuario> obtenerPosiblesDesinatarios(Usuario usuario, int max) throws UsuarioException {
+    @Override
+    public List<Usuario> obtenerPosiblesDesinatarios(Usuario usuario, int max) throws UsuarioException {
         try {
             usuario.valido();
-            return usuarioRepo.obtenerPosiblesDestinatarios(usuario.getId(), max);
+            return usuarioRepo.findByIdAndDestinatario(usuario.getId());
         } catch (Exception e) {
             e.printStackTrace();
             throw new UsuarioException("Error en obtener destinatarios");
         }
-    }*/
+    }
 }

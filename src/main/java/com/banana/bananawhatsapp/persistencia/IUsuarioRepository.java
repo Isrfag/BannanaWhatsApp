@@ -15,20 +15,11 @@ import java.util.Set;
 
 public interface IUsuarioRepository extends JpaRepository<Usuario, Integer> {
 
-    @Query("SELECT u FROM Usuario u INNER JOIN Mensaje m ON m.destinatario = u.id WHERE m.remitente = :user")
-    public List<Usuario> findByIdAndDestinatario(@Param("user")int Iduser);
+    @Query("SELECT u FROM Usuario u INNER JOIN Mensaje m ON m.destinatario = u.id WHERE u.id = :id")
+    public List<Usuario> findByIdAndDestinatario(@Param("id")Integer id) throws UsuarioException;
 
-    public default void findById (Usuario usuario) throws UsuarioException {
+    public default void validarUsuario (Usuario usuario) throws UsuarioException {
         if (usuario.getId() < 1 ) throw new UsuarioException("usuario inválido");
     }
-
-    //public Usuario obtener(int id) throws SQLException;
-    //public Usuario crear(Usuario usuario) throws SQLException;
-
-    //public Usuario actualizar(Usuario usuario) throws SQLException;
-
-    //public boolean borrar(Usuario usuario) throws SQLException;
-
-    //public Set<Usuario> obtenerPosiblesDestinatarios(Integer id, Integer max) throws SQLException;
 
 }

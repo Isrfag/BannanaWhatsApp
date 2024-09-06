@@ -14,6 +14,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -25,8 +26,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class ServicioUsuariosTest {
     @Autowired
     IServicioUsuarios servicio;
-
-
 
     @BeforeEach
     void cleanAndReloadData() {
@@ -82,12 +81,11 @@ class ServicioUsuariosTest {
         });
     }
 
-   /* @Test
+    @Test
     void dadoUnUsuarioValido_cuandoObtenerPosiblesDesinatarios_entoncesUsuariosValidos() {
         int numPosibles = 100;
         Usuario user = new Usuario(1, "Juan", "j@j.com", LocalDate.now(), true);
-
-        Set<Usuario> conjuntoDestinatarios = servicio.obtenerPosiblesDesinatarios(user, numPosibles);
+        List<Usuario> conjuntoDestinatarios = servicio.obtenerPosiblesDesinatarios(user, numPosibles);
         assertThat(conjuntoDestinatarios.size(), lessThanOrEqualTo(numPosibles));
     }
 
@@ -98,5 +96,5 @@ class ServicioUsuariosTest {
         assertThrows(UsuarioException.class, () -> {
             servicio.obtenerPosiblesDesinatarios(user, numPosibles);
         });
-    }*/
+    }
 }

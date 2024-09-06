@@ -110,20 +110,18 @@ class UsuarioRepositoryTest {
         List<Usuario> usuariosDestinatarios = repo.findByIdAndDestinatario(1);
 
         assertTrue(usuariosDestinatarios.size() <= numPosibles);
-        //Set<Usuario> conjuntoDestinatarios = repo.obtenerPosiblesDestinatarios(user.getId(), numPosibles);
-        //assertTrue(conjuntoDestinatarios.size() <= numPosibles);
     }
-/*
+
     @Test
     @Order(8)
     void dadoUnUsuarioNOValido_cuandoObtenerPosiblesDestinatarios_entoncesExcepcion() throws Exception {
         Usuario user = new Usuario(-1, null, null, null, true);
         int numPosibles = 100;
         assertThrows(UsuarioException.class, () -> {
-            //Set<Usuario> conjuntoDestinatarios = repo.obtenerPosiblesDestinatarios(user.getId(), numPosibles);
+            List<Usuario> usuariosDestinatarios = repo.findByIdAndDestinatario(-1);
         });
 
     }
-*/
+
 
 }
