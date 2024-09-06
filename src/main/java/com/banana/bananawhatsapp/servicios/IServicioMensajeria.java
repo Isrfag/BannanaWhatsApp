@@ -6,12 +6,13 @@ import com.banana.bananawhatsapp.modelos.Mensaje;
 import com.banana.bananawhatsapp.modelos.Usuario;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IServicioMensajeria {
 
     public Mensaje enviarMensaje(Usuario remitente, Usuario destinatario, String texto) throws UsuarioException, MensajeException;
 
-    public List<Mensaje> mostrarChatConUsuario(Usuario remitente, Usuario destinatario) throws UsuarioException, MensajeException;
+    public Optional<List<Mensaje>> mostrarChatConUsuario(Usuario remitente, Usuario destinatario) throws UsuarioException, MensajeException;
 
     public boolean borrarChatConUsuario(Usuario remitente, Usuario destinatario) throws UsuarioException, MensajeException;
 
