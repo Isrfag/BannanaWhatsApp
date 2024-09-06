@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.Set;
 
 
-public interface IUsuarioRepository extends JpaRepository<Usuario, Long> {
+public interface IUsuarioRepository extends JpaRepository<Usuario, Integer> {
     //public Usuario obtener(int id) throws SQLException;
     //public Usuario crear(Usuario usuario) throws SQLException;
 
@@ -16,6 +16,6 @@ public interface IUsuarioRepository extends JpaRepository<Usuario, Long> {
 
     //public boolean borrar(Usuario usuario) throws SQLException;
 
-    //public Set<Usuario> obtenerPosiblesDestinatarios(Integer id, Integer max) throws SQLException;
+   // public Set<Usuario> obtenerPosiblesDestinatarios(Integer id, Integer max) throws SQLException;
 
 }
