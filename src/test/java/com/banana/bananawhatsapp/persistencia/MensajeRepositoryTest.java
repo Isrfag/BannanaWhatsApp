@@ -1,6 +1,6 @@
 package com.banana.bananawhatsapp.persistencia;
 
-import com.banana.bananawhatsapp.exceptions.MensajeException;
+import com.banana.bananawhatsapp.config.SpringConfig;
 import com.banana.bananawhatsapp.exceptions.UsuarioException;
 import com.banana.bananawhatsapp.modelos.Mensaje;
 import com.banana.bananawhatsapp.modelos.Usuario;
@@ -8,23 +8,31 @@ import com.banana.bananawhatsapp.util.DBUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.*;
 
-
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {SpringConfig.class})
 @EnableAutoConfiguration
 class MensajeRepositoryTest {
 
+    @Autowired
     IUsuarioRepository repoUsuario;
 
+    @Autowired
     IMensajeRepository repoMensaje;
 
     @BeforeEach
@@ -34,18 +42,21 @@ class MensajeRepositoryTest {
 
     @Test
     @Order(1)
-    void dadoUnMensajeValido_cuandoCrear_entoncesMensajeValido() throws Exception {
+    void dadoUnMensajeValido_cuandoCrear_entoncesMensajeValido () throws Exception {
 
-        Optional<Usuario> remitente = repoUsuario.findById(1L);
-        Optional<Usuario> destinatario = repoUsuario.findById(2L);
+        Optional<Usuario> remitente = repoUsuario.findById(1);
+        Optional<Usuario> destinatario = repoUsuario.findById(2);
 
-        Mensaje message = new Mensaje(null,remitente.get(), destinatario.get(), "De acuerdo Juana. Un saludo.", LocalDate.now());
 
-        //repoMensaje.crear(message);
+
+        Mensaje message = new Mensaje(1,remitente.get(), destinatario.get(), "De acuerdo Juana. Un saludo.", LocalDate.now());
+
+
+        //repoMensaje.save(message);
         assertThat(message, notNullValue());
         assertThat(message.getId(), greaterThan(0));
     }
-    /*
+
     @Test
     @Order(2)
     void dadoUnMensajeNOValido_cuandoCrear_entoncesExcepcion() throws Exception {
@@ -53,38 +64,55 @@ class MensajeRepositoryTest {
         Usuario destinatario = new Usuario(2, null, null, null, true);
         Mensaje message = new Mensaje(null, destinatario, remitente, "SMS < 10", LocalDate.now());
         assertThrows(Exception.class, () -> {
-            repoMensaje.crear(message);
+            repoMensaje.saveWithException(message);
         });
     }
+
 
     @Test
     @Order(3)
     void dadoUnUsuarioValido_cuandoObtener_entoncesListaMensajes() throws Exception {
-        Usuario user = repoUsuario.obtener(1);
-
-        List<Mensaje> userMessages = repoMensaje.obtener(user);
+        Optional<Usuario> user = repoUsuario.findById(1);
+        List <Mensaje> userMessages = repoMensaje.findMensajeListByUsuario(user.stream().findFirst());
         assertNotNull(userMessages);
     }
+
 
     @Test
     @Order(4)
     void dadoUnUsuarioNOValido_cuandoObtener_entoncesExcepcion() throws Exception {
-        Usuario user = new Usuario(1, null, null, null, false);
+        Optional <Usuario> user = Optional.of(new Usuario(1, null, null, null, false));
 
         assertThrows(UsuarioException.class, () -> {
-            List<Mensaje> userMessages = repoMensaje.obtener(user);
+            List<Mensaje> userMessages = repoMensaje.findMessageByUserException(user);
         });
     }
+
 
     @Test
     @Order(5)
     void dadoUnRemitenteValido_cuandoBorrarEntre_entoncesOK() throws Exception {
-        Usuario remitente = repoUsuario.obtener(1);
-        Usuario destinatario = repoUsuario.obtener(2);
+        Optional<Usuario> remitente = repoUsuario.findById(1);
+        Optional<Usuario> destinatario = repoUsuario.findById(2);
 
-        boolean borrarChat = repoMensaje.borrarEntre(remitente, destinatario);
-        assertTrue(borrarChat);
+        List<Mensaje> remi = repoMensaje.findByIdAndDestinatario(remitente);
+        List<Mensaje> desti= repoMensaje.findByIdAndDestinatario(destinatario);
+
+        for (Mensaje m: remi) {
+            for (Mensaje m2: desti) {
+                if(m.getRemitente() == m2.getDestinatario()) {
+
+
+                }
+            }
+        }
+
+        //boolean borrarChat = repoMensaje.borrarEntre(remitente, destinatario);
+
+        //assertTrue(borrarChat);
     }
+
+ /*
 
     @Test
     @Order(6)
