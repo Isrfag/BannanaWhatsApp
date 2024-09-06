@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 
@@ -18,8 +19,24 @@ public interface IUsuarioRepository extends JpaRepository<Usuario, Integer> {
     @Query("SELECT u FROM Usuario u INNER JOIN Mensaje m ON m.destinatario = u.id WHERE u.id = :id")
     public List<Usuario> findByIdAndDestinatario(@Param("id")Integer id) throws UsuarioException;
 
-    public default void validarUsuario (Usuario usuario) throws UsuarioException {
-        if (usuario.getId() < 1 ) throw new UsuarioException("usuario inválido");
+
+
+    public default Optional saveValidado (Usuario usuario) throws UsuarioException {
+        if (usuario.getId() < 1 ) {throw new UsuarioException("usuario inválido");} else {
+            return Optional.of( save(usuario));
+        }
+    }
+
+    public default void deleteValidado (Usuario usuario) throws UsuarioException {
+        if (usuario.getId() < 1 ) {throw new UsuarioException("usuario inválido");} else {
+            delete(usuario);
+        }
+    }
+
+    public default List<Usuario> findByIdAndDestinatarioValidado (int id) throws UsuarioException {
+        if (id < 1 ) {throw new UsuarioException("usuario inválido");} else {
+            return findByIdAndDestinatario(id);
+        }
     }
 
 }
