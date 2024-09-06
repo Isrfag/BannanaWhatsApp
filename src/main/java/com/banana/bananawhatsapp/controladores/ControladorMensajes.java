@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
+import java.util.Optional;
 
 //@Controller
 public class ControladorMensajes {
@@ -38,12 +39,10 @@ public class ControladorMensajes {
             Usuario uDestinatario = new Usuario();
             uDestinatario.setId(destinatario);
 
-            List<Mensaje> mensajes = servicioMensajeria.mostrarChatConUsuario(uRemitente, uDestinatario);
-            if (mensajes != null && mensajes.size() > 0) {
+            Optional <List<Mensaje>> mensajes = servicioMensajeria.mostrarChatConUsuario(uRemitente, uDestinatario);
+            if (mensajes != null && mensajes.get().size() > 0) {
                 System.out.println("Mensajes entre: " + remitente + " y " + destinatario);
-                for (Mensaje mensaje : mensajes) {
-                    System.out.println(mensaje);
-                }
+                mensajes.stream().forEach(m -> System.out.println(m));
             } else {
                 System.out.println("NO hay mensajes entre: " + remitente + " y " + destinatario);
             }
