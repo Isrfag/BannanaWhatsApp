@@ -3,9 +3,10 @@ package com.banana.bananawhatsapp.controladores;
 import com.banana.bananawhatsapp.modelos.Usuario;
 import com.banana.bananawhatsapp.servicios.IServicioUsuarios;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 
-
+@Controller
 public class ControladorUsuarios {
 
     @Autowired
