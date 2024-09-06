@@ -8,6 +8,6 @@ import java.sql.SQLException;
 import java.util.Set;
 
 
-public interface IUsuarioRepository extends JpaRepository<Usuario, Long> {
+public interface IUsuarioRepository extends JpaRepository<Usuario, Integer> {
 
 }
