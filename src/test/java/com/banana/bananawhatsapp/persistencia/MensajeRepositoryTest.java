@@ -8,6 +8,7 @@ import com.banana.bananawhatsapp.util.DBUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,6 +20,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.*;
 
 
+@EnableAutoConfiguration
 class MensajeRepositoryTest {
 
     IUsuarioRepository repoUsuario;
@@ -34,7 +36,6 @@ class MensajeRepositoryTest {
     @Order(1)
     void dadoUnMensajeValido_cuandoCrear_entoncesMensajeValido() throws Exception {
 
-        
         Optional<Usuario> remitente = repoUsuario.findById(1L);
         Optional<Usuario> destinatario = repoUsuario.findById(2L);
 

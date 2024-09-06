@@ -5,6 +5,10 @@ import com.banana.bananawhatsapp.modelos.Usuario;
 import java.util.Set;
 
 public interface IServicioUsuarios {
+
+
+
+    //old JPA
     public Usuario obtener(int id) throws UsuarioException;
 
     public Usuario crearUsuario(Usuario usuario) throws UsuarioException;
