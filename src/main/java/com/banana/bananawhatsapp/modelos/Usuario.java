@@ -23,10 +23,11 @@ public class Usuario {
     private LocalDate alta;
     private boolean activo;
 
-    @OneToMany(mappedBy = "remitente", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "remitente", cascade = CascadeType.ALL)
+    @ToString.Exclude
     private List<Mensaje> mensajesRemitente;
 
-    @OneToMany(mappedBy = "destinatario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "destinatario", cascade = CascadeType.ALL)
     private List<Mensaje> mensajesDestinatario;
 
 

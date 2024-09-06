@@ -36,8 +36,8 @@ class MensajeRepositoryTest {
     @Order(1)
     void dadoUnMensajeValido_cuandoCrear_entoncesMensajeValido() throws Exception {
 
-        Optional<Usuario> remitente = repoUsuario.findById(1L);
-        Optional<Usuario> destinatario = repoUsuario.findById(2L);
+        Optional<Usuario> remitente = repoUsuario.findById(1);
+        Optional<Usuario> destinatario = repoUsuario.findById(2);
 
         Mensaje message = new Mensaje(null,remitente.get(), destinatario.get(), "De acuerdo Juana. Un saludo.", LocalDate.now());
 
