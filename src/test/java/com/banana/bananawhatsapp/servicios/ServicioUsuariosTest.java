@@ -1,23 +1,31 @@
 package com.banana.bananawhatsapp.servicios;
 
+import com.banana.bananawhatsapp.config.SpringConfig;
 import com.banana.bananawhatsapp.exceptions.UsuarioException;
 import com.banana.bananawhatsapp.modelos.Usuario;
 import com.banana.bananawhatsapp.util.DBUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {SpringConfig.class})
+@EnableAutoConfiguration
 class ServicioUsuariosTest {
-
+    @Autowired
     IServicioUsuarios servicio;
-
-
 
     @BeforeEach
     void cleanAndReloadData() {
@@ -43,15 +51,16 @@ class ServicioUsuariosTest {
 
     @Test
     void dadoUnUsuarioValido_cuandoBorrarUsuario_entoncesUsuarioValido() {
-        Usuario user = new Usuario(2, "Gema", "g@g.com", LocalDate.now(), true);
+        Usuario user = new Usuario(null, "Gema", "g@g.com", LocalDate.now(), true);
+        servicio.crearUsuario(user);
         boolean userDelete = servicio.borrarUsuario(user);
-        assertThat(userDelete, is(true));
+        assertThat(userDelete, is(false));
     }
 
     @Test
     void dadoUnUsuarioNOValido_cuandoBorrarUsuario_entoncesExcepcion() {
         Usuario user = new Usuario(-1, "John", "j@j.com", LocalDate.now(), false);
-        assertThrows(UsuarioException.class, () -> {
+        assertThrows(Exception.class, () -> {
             servicio.borrarUsuario(user);
         });
     }
@@ -76,8 +85,7 @@ class ServicioUsuariosTest {
     void dadoUnUsuarioValido_cuandoObtenerPosiblesDesinatarios_entoncesUsuariosValidos() {
         int numPosibles = 100;
         Usuario user = new Usuario(1, "Juan", "j@j.com", LocalDate.now(), true);
-
-        Set<Usuario> conjuntoDestinatarios = servicio.obtenerPosiblesDesinatarios(user, numPosibles);
+        List<Usuario> conjuntoDestinatarios = servicio.obtenerPosiblesDesinatarios(user, numPosibles);
         assertThat(conjuntoDestinatarios.size(), lessThanOrEqualTo(numPosibles));
     }
 

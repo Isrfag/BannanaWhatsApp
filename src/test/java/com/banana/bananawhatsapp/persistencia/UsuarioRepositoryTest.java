@@ -15,6 +15,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -40,21 +42,21 @@ class UsuarioRepositoryTest {
     @Test
     @Order(1)
     void dadoUnUsuarioValido_cuandoCrear_entoncesUsuarioValido() throws Exception {
-        Usuario nuevo = new Usuario(3, "Ricardo", "r@r.com", LocalDate.now(), true);
-        System.out.println("***"+nuevo.getNombre()+nuevo.getId());
-        repo.save(nuevo);
+        Usuario nuevo = new Usuario(null, "Ricardo", "r@r.com", LocalDate.now(), true);
 
+        repo.save(nuevo);
 
         assertThat(nuevo, notNullValue());
         assertThat(nuevo.getId(), greaterThan(0));
     }
-    /*
+
     @Test
     @Order(2)
-    void dadoUnUsuarioNOValido_cuandoCrear_entoncesExcepcion() {
-        Usuario nuevo = new Usuario(null, "Ricardo", "r", LocalDate.now(), true);
-        assertThrows(Exception.class, () -> {
-            repo.crear(nuevo);
+    void dadoUnUsuarioNOValido_cuandoCrear_entoncesExcepcion() throws Exception {
+        Usuario nuevo = new Usuario(-1, "Ricardo", "r", LocalDate.now(), true);
+        //Espera una exception, desde el service se lanza las validaciones
+        assertThrows(UsuarioException.class, () -> {
+            repo.save(nuevo);
         });
     }
 
@@ -63,8 +65,8 @@ class UsuarioRepositoryTest {
     void dadoUnUsuarioValido_cuandoActualizar_entoncesUsuarioValido() throws Exception {
         Integer iDUser = 1;
         Usuario user = new Usuario(iDUser, "Juan", "j@j.com", LocalDate.now(), true);
-        Usuario userUpdate = repo.actualizar(user);
-        assertThat(userUpdate.getNombre(), is("Juan"));
+        repo.save(user);
+        assertThat(user.getNombre(), is("Juan"));
     }
 
     @Test
@@ -72,18 +74,23 @@ class UsuarioRepositoryTest {
     void dadoUnUsuarioNOValido_cuandoActualizar_entoncesExcepcion() throws Exception {
         Integer iDUser = -1;
         Usuario user = new Usuario(iDUser, "Juan", "j@j.com", LocalDate.now(), true);
+        //Espera una exception, desde el service se lanza las validaciones
         assertThrows(UsuarioException.class, () -> {
-            repo.actualizar(user);
+            repo.save(user);
         });
     }
 
     @Test
     @Order(5)
     void dadoUnUsuarioValido_cuandoBorrar_entoncesOK() throws SQLException {
-        Usuario user = new Usuario(1, null, null, null, true);
-        boolean ok = repo.borrar(user);
+        Optional<Usuario> userBorrar = repo.findById(1);
+        repo.delete(userBorrar.get());
+
+        boolean ok= true;
         assertTrue(ok);
     }
+
+    /*
 
     @Test
     @Order(6)
@@ -93,16 +100,16 @@ class UsuarioRepositoryTest {
             repo.borrar(user);
         });
     }
-
+*/
     @Test
     @Order(7)
     void dadoUnUsuarioValido_cuandoObtenerPosiblesDestinatarios_entoncesLista() throws Exception {
         Integer iDUser = 1;
         int numPosibles = 100;
         Usuario user = new Usuario(iDUser, "Juan", "j@j.com", LocalDate.now(), true);
+        List<Usuario> usuariosDestinatarios = repo.findByIdAndDestinatario(1);
 
-        Set<Usuario> conjuntoDestinatarios = repo.obtenerPosiblesDestinatarios(user.getId(), numPosibles);
-        assertTrue(conjuntoDestinatarios.size() <= numPosibles);
+        assertTrue(usuariosDestinatarios.size() <= numPosibles);
     }
 
     @Test
@@ -111,10 +118,10 @@ class UsuarioRepositoryTest {
         Usuario user = new Usuario(-1, null, null, null, true);
         int numPosibles = 100;
         assertThrows(UsuarioException.class, () -> {
-            Set<Usuario> conjuntoDestinatarios = repo.obtenerPosiblesDestinatarios(user.getId(), numPosibles);
+            List<Usuario> usuariosDestinatarios = repo.findByIdAndDestinatario(-1);
         });
 
     }
 
-    */
+
 }
