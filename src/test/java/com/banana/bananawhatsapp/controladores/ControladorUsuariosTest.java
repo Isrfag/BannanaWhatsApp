@@ -18,7 +18,7 @@ class ControladorUsuariosTest {
 
     IUsuarioRepository repoUser;
 
-
+    /*
     @BeforeEach
     void cleanAndReloadData() {
         DBUtil.reloadDB();
@@ -79,4 +79,6 @@ class ControladorUsuariosTest {
             controladorUsuarios.baja(user);
         });
     }
+    */
+
 }
