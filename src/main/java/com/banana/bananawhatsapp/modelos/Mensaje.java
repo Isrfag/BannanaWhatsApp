@@ -4,17 +4,26 @@ import com.banana.bananawhatsapp.exceptions.MensajeException;
 import lombok.*;
 
 import java.time.LocalDate;
+import javax.persistence.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
 @ToString
+@Entity
 public class Mensaje {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @ManyToOne
+    @JoinColumn (name = "from_user")
     private Usuario remitente;
 
+    @ManyToOne
+    @JoinColumn(name = "to_user")
     private Usuario destinatario;
 
     private String cuerpo;
