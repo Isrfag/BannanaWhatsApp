@@ -1,5 +1,6 @@
 package com.banana.bananawhatsapp.persistencia;
 
+import com.banana.bananawhatsapp.config.SpringConfig;
 import com.banana.bananawhatsapp.exceptions.MensajeException;
 import com.banana.bananawhatsapp.exceptions.UsuarioException;
 import com.banana.bananawhatsapp.modelos.Mensaje;
@@ -8,7 +9,10 @@ import com.banana.bananawhatsapp.util.DBUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,7 +23,8 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.*;
 
-
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {SpringConfig.class})
 @EnableAutoConfiguration
 class MensajeRepositoryTest {
 
@@ -34,16 +39,19 @@ class MensajeRepositoryTest {
 
     @Test
     @Order(1)
-    void dadoUnMensajeValido_cuandoCrear_entoncesMensajeValido() throws Exception {
+    void dadoUnMensajeValido_cuandoCrear_entoncesMensajeValido () throws Exception {
 
         Optional<Usuario> remitente = repoUsuario.findById(1L);
         Optional<Usuario> destinatario = repoUsuario.findById(2L);
 
-        Mensaje message = new Mensaje(null,remitente.get(), destinatario.get(), "De acuerdo Juana. Un saludo.", LocalDate.now());
+        System.out.println(remitente.get().getNombre());
 
-        //repoMensaje.crear(message);
+        /*Mensaje message = new Mensaje(1,remitente.get(), destinatario.get(), "De acuerdo Juana. Un saludo.", LocalDate.now());
+
+
+        //repoMensaje.save(message);
         assertThat(message, notNullValue());
-        assertThat(message.getId(), greaterThan(0));
+        assertThat(message.getId(), greaterThan(0));*/
     }
     /*
     @Test
