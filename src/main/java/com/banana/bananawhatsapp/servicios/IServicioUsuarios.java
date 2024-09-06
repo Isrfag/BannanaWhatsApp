@@ -6,8 +6,6 @@ import java.util.Set;
 
 public interface IServicioUsuarios {
 
-
-
     //old JPA
     public Usuario obtener(int id) throws UsuarioException;
 

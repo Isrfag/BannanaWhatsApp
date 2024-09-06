@@ -8,6 +8,7 @@ import com.banana.bananawhatsapp.util.DBUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import java.time.LocalDate;
@@ -23,8 +24,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @EnableAutoConfiguration
 class MensajeRepositoryTest {
 
+    @Autowired
     IUsuarioRepository repoUsuario;
 
+    @Autowired
     IMensajeRepository repoMensaje;
 
     @BeforeEach
@@ -45,7 +48,7 @@ class MensajeRepositoryTest {
         assertThat(message, notNullValue());
         assertThat(message.getId(), greaterThan(0));
     }
-    /*
+
     @Test
     @Order(2)
     void dadoUnMensajeNOValido_cuandoCrear_entoncesExcepcion() throws Exception {
@@ -60,9 +63,9 @@ class MensajeRepositoryTest {
     @Test
     @Order(3)
     void dadoUnUsuarioValido_cuandoObtener_entoncesListaMensajes() throws Exception {
-        Usuario user = repoUsuario.obtener(1);
+        Optional<Usuario> user = repoUsuario.findById(1);
 
-        List<Mensaje> userMessages = repoMensaje.obtener(user);
+        List<Mensaje> userMessages = repoMensaje.findById(user);
         assertNotNull(userMessages);
     }
 
@@ -75,7 +78,7 @@ class MensajeRepositoryTest {
             List<Mensaje> userMessages = repoMensaje.obtener(user);
         });
     }
-
+   /*
     @Test
     @Order(5)
     void dadoUnRemitenteValido_cuandoBorrarEntre_entoncesOK() throws Exception {

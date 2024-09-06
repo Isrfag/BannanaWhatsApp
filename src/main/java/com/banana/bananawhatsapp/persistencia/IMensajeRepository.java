@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.sql.SQLException;
 import java.util.List;
 
-public interface IMensajeRepository extends JpaRepository<Mensaje,Long> {
+public interface IMensajeRepository extends JpaRepository<Mensaje,Integer> {
 
 
 }

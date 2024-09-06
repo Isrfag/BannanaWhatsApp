@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.Set;
 
 
-public interface IUsuarioRepository extends JpaRepository<Usuario, Long> {
+public interface IUsuarioRepository extends JpaRepository<Usuario, Integer> {
     //public Usuario obtener(int id) throws SQLException;
     //public Usuario crear(Usuario usuario) throws SQLException;
 
