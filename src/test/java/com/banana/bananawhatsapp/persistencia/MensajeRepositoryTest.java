@@ -95,21 +95,9 @@ class MensajeRepositoryTest {
         Optional<Usuario> remitente = repoUsuario.findById(1);
         Optional<Usuario> destinatario = repoUsuario.findById(2);
 
-        List<Mensaje> remi = repoMensaje.findByIdAndDestinatario(remitente);
-        List<Mensaje> desti= repoMensaje.findByIdAndDestinatario(destinatario);
+        boolean borrarChat = repoMensaje.deleteDouble(remitente, destinatario);
 
-        for (Mensaje m: remi) {
-            for (Mensaje m2: desti) {
-                if(m.getRemitente() == m2.getDestinatario()) {
-
-
-                }
-            }
-        }
-
-        //boolean borrarChat = repoMensaje.borrarEntre(remitente, destinatario);
-
-        //assertTrue(borrarChat);
+        assertTrue(borrarChat);
     }
 
  /*
